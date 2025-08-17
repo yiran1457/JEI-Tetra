@@ -4,7 +4,6 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -24,7 +23,6 @@ import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.effect.ItemEffect;
 
-import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"removal", "all"})
@@ -34,7 +32,8 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
     public static Object[] prarm = new String[]{"n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n"};
 
     public EffectRecipeCategory(IGuiHelper guiHelper) {
-        super(recipeType, Component.literal("all.effect"), guiHelper.createDrawableItemLike(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tetra:geode"))), 175, 200);
+        super(recipeType, Component.translatable("jeitetra.alleffect.title"),
+                guiHelper.createDrawableItemLike(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tetra:pristine_quartz"))), 175, 200);
         mc = Minecraft.getInstance();
     }
 
