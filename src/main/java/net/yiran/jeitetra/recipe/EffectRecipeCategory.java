@@ -24,6 +24,7 @@ import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.effect.ItemEffect;
 
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings({"removal", "all"})
 public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
@@ -57,7 +58,9 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
                 .values()
                 .stream()
                 .filter(materialData -> materialData.effects.contains(itemEffect))
-                .map(materialData -> getItems(materialData.material.getPredicate()))
+                .map(materialData -> materialData.material.getPredicate())
+                .filter(Objects::nonNull)
+                .map(EffectRecipeCategory::getItems)
                 .flatMap(List::stream)
                 .toList();
     }
@@ -88,16 +91,26 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
                 192, 220
         );
         var font = mc.font;
+
         var effect = recipe.getKey();
-        var langKey = "tetra.stats." + effect;
-        var drawText = I18n.get(langKey);
-        var left = (this.getWidth() - font.width(drawText)) / 2;
-        guiGraphics.drawString(font, drawText, left, 0, -1);
-        left = (this.getWidth() - font.width(effect)) / 2;
+        var left = (this.getWidth() - font.width(effect)) / 2;
         guiGraphics.drawString(font, "§7" + effect, left, 10, -1);
+        var sneakEffect = effect.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
+        var langKey = "tetra.stats." + effect;
+        var sneakKey =  "tetra.stats." + sneakEffect;
+        if(I18n.exists(sneakKey)){
+            langKey = sneakKey;
+        }
+        var drawText = I18n.get(langKey);
+        left = (this.getWidth() - font.width(drawText)) / 2;
+        guiGraphics.drawString(font, drawText, left, 0, -1);
+
         if(I18n.exists(langKey = "jeitetra.effect." + effect + ".desc")
                 ||I18n.exists(langKey = "tetra.stats." + effect + ".tooltip")
                 ||I18n.exists(langKey = "tetra.stats." + effect + ".tooltip_short")
+                ||I18n.exists(langKey = "jeitetra.effect." + sneakEffect + ".desc")
+                ||I18n.exists(langKey = "tetra.stats." + sneakEffect + ".tooltip")
+                ||I18n.exists(langKey = "tetra.stats." + sneakEffect + ".tooltip_short")
         )
             guiGraphics.drawWordWrap(font,FormattedText.of(I18n.get(langKey, prarm)),6,30,175-12,-1);
         else {
@@ -105,6 +118,11 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
             guiGraphics.drawString(font, "§8jeitetra.effect." + effect + ".desc", 6, 40, -1,false);
             guiGraphics.drawString(font, "§8tetra.stats." + effect + ".tooltip", 6, 50, -1,false);
             guiGraphics.drawString(font, "§8tetra.stats." + effect + ".tooltip_short", 6, 60, -1,false);
+            if(!sneakEffect.equals(effect)){
+                guiGraphics.drawString(font, "§8jeitetra.effect." + sneakEffect + ".desc", 6, 70, -1,false);
+                guiGraphics.drawString(font, "§8tetra.stats." + sneakEffect + ".tooltip", 6, 80, -1,false);
+                guiGraphics.drawString(font, "§8tetra.stats." + sneakEffect + ".tooltip_short", 6, 90, -1,false);
+            }
         }
     }
 }
