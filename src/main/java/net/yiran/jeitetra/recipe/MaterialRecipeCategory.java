@@ -21,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.material.MaterialIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.material.MaterialRecipeIngredientRenderer;
+import net.yiran.jeitetra.util.Drawables;
 import net.yiran.jeitetra.util.GuiElementRecipeWidget;
 import net.yiran.jeitetra.util.GuiMaterialData;
 import se.mickelus.tetra.module.data.MaterialData;

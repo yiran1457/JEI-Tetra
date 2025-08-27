@@ -1,4 +1,4 @@
-package net.yiran.jeitetra.subtype;
+package net.yiran.jeitetra.itemsubtype;
 
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;

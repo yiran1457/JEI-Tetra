@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.yiran.jeitetra.util.Drawables;
 import se.mickelus.tetra.module.ReplacementDefinition;
 
 @SuppressWarnings({"removal", "all"})

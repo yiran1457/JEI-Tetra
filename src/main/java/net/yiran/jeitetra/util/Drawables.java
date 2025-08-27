@@ -1,4 +1,4 @@
-package net.yiran.jeitetra.recipe;
+package net.yiran.jeitetra.util;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.common.gui.elements.DrawableResource;
