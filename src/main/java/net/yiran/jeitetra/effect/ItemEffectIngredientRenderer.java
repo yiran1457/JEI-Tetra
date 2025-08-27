@@ -27,14 +27,11 @@ public class ItemEffectIngredientRenderer implements IIngredientRenderer<ItemEff
         } else {
             var font = Minecraft.getInstance().font;
             var color = (effect.hashCode() & 0x00FFFFFF) | 0xCC000000;
-            var langKey = "tetra.stats." + effect;
-            var sneakKey =  "tetra.stats." + sneakEffect;
-            if(I18n.exists(sneakKey)){
-                langKey = sneakKey;
-            }
-            if (I18n.exists(langKey)) {
+            String langKey;
+            if (I18n.exists(langKey = ItemEffectLangManager.instance.getNameKey(itemEffect))) {
                 effect = I18n.get(langKey);
             }
+            effect = effect.replaceAll("(§)(.)", "");
             var cha = effect.charAt(0);
             if (Character.isLowerCase(cha)) {
                 cha = Character.toUpperCase(cha);
@@ -70,12 +67,9 @@ public class ItemEffectIngredientRenderer implements IIngredientRenderer<ItemEff
     @SuppressWarnings("removal")
     public List<Component> getTooltip(ItemEffect itemEffect, TooltipFlag tooltipFlag) {
         var effect = itemEffect.getKey();
-        var sneakEffect = effect.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
-        var langKey = "tetra.stats." + effect;
-        var sneakKey =  "tetra.stats." + sneakEffect;
-        if (I18n.exists(sneakKey)) {
-            langKey = sneakKey;
-        }
-        return List.of(Component.translatable(langKey), Component.literal(effect));
+        return List.of(
+                Component.translatable(ItemEffectLangManager.instance.getName(itemEffect)),
+                Component.literal(effect)
+        );
     }
 }

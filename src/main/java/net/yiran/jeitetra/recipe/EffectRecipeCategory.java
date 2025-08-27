@@ -2,7 +2,6 @@ package net.yiran.jeitetra.recipe;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -20,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
+import net.yiran.jeitetra.effect.ItemEffectLangManager;
 import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.effect.ItemEffect;
 
@@ -39,17 +39,11 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
     }
 
     @Override
-    public IDrawable getBackground() {
-        return null;
-        //return Drawables.EFFECT_BACK_GROUND;
-    }
-
-    @Override
     public void setRecipe(IRecipeLayoutBuilder iRecipeLayoutBuilder, ItemEffect itemEffect, IFocusGroup iFocusGroup) {
         iRecipeLayoutBuilder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredient(ItemEffectIngredientTypeWithSubtypes.INSTANCE, itemEffect);
         var items = getItems(itemEffect);
-        if(items == null || items.isEmpty()) return;
-        iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT,5,1).setBackground(Drawables.SLOT,0,0).addIngredients(VanillaTypes.ITEM_STACK, items);
+        if (items == null || items.isEmpty()) return;
+        iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 5, 1).setBackground(Drawables.SLOT, 0, 0).addIngredients(VanillaTypes.ITEM_STACK, items);
     }
 
     public static List<ItemStack> getItems(ItemEffect itemEffect) {
@@ -72,17 +66,9 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
             return itemPredicate.items.stream().map(ItemStack::new).toList();
         }
     }
+
     @Override
     public void draw(ItemEffect recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        /*
-        guiGraphics.blit(
-                new ResourceLocation("tetra", "textures/gui/pamphlet.png"),
-                -8, -8, 0,
-                4, 5,
-                192, 220,
-                256*192/153, 256*220/179
-        );
-        */
         guiGraphics.blit(
                 new ResourceLocation("jeitetra", "textures/gui/background2.png"),
                 -8, -8, 0,
@@ -95,34 +81,17 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
         var effect = recipe.getKey();
         var left = (this.getWidth() - font.width(effect)) / 2;
         guiGraphics.drawString(font, "§7" + effect, left, 10, -1);
-        var sneakEffect = effect.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
-        var langKey = "tetra.stats." + effect;
-        var sneakKey =  "tetra.stats." + sneakEffect;
-        if(I18n.exists(sneakKey)){
-            langKey = sneakKey;
-        }
-        var drawText = I18n.get(langKey);
+        var drawText = ItemEffectLangManager.instance.getName(recipe);
         left = (this.getWidth() - font.width(drawText)) / 2;
         guiGraphics.drawString(font, drawText, left, 0, -1);
 
-        if(I18n.exists(langKey = "jeitetra.effect." + effect + ".desc")
-                ||I18n.exists(langKey = "tetra.stats." + effect + ".tooltip")
-                ||I18n.exists(langKey = "tetra.stats." + effect + ".tooltip_short")
-                ||I18n.exists(langKey = "jeitetra.effect." + sneakEffect + ".desc")
-                ||I18n.exists(langKey = "tetra.stats." + sneakEffect + ".tooltip")
-                ||I18n.exists(langKey = "tetra.stats." + sneakEffect + ".tooltip_short")
-        )
-            guiGraphics.drawWordWrap(font,FormattedText.of(I18n.get(langKey, prarm)),6,30,175-12,-1);
-        else {
-            guiGraphics.drawString(font,"§7Cann't find any description in :" , 6,30,-1,false);
-            guiGraphics.drawString(font, "§8jeitetra.effect." + effect + ".desc", 6, 40, -1,false);
-            guiGraphics.drawString(font, "§8tetra.stats." + effect + ".tooltip", 6, 50, -1,false);
-            guiGraphics.drawString(font, "§8tetra.stats." + effect + ".tooltip_short", 6, 60, -1,false);
-            if(!sneakEffect.equals(effect)){
-                guiGraphics.drawString(font, "§8jeitetra.effect." + sneakEffect + ".desc", 6, 70, -1,false);
-                guiGraphics.drawString(font, "§8tetra.stats." + sneakEffect + ".tooltip", 6, 80, -1,false);
-                guiGraphics.drawString(font, "§8tetra.stats." + sneakEffect + ".tooltip_short", 6, 90, -1,false);
-            }
+        if (I18n.exists(ItemEffectLangManager.instance.getDescKey(recipe))) {
+            guiGraphics.drawWordWrap(font, FormattedText.of(I18n.get(ItemEffectLangManager.instance.getDescKey(recipe), prarm)), 6, 30, 175 - 12, -1);
+        } else {
+            guiGraphics.drawString(font, "§7Cann't find any description in :", 6, 30, -1, false);
+            guiGraphics.drawString(font, "§8jeitetra.effect." + effect + ".desc", 6, 40, -1, false);
+            guiGraphics.drawString(font, "§8tetra.stats." + effect + ".tooltip", 6, 50, -1, false);
+            guiGraphics.drawString(font, "§8tetra.stats." + effect + ".tooltip_short", 6, 60, -1, false);
         }
     }
 }

@@ -1,4 +1,17 @@
 {
   "jeitetra.action.loot.info": "输出战利品表为:",
-  "jeitetra.alleffect.title": "词条图鉴"
+  "jeitetra.alleffect.title": "词条图鉴",
+  "jeitetra.material.title": "材料图鉴",
+  "tetra.holo.craft.materials.stat.experienceCost": "经验消耗",
+  "tetra.holo.craft.materials.stat.category": "类型",
+  "tetra.holo.craft.materials.stat.effects": "材料拥有以下effect",
+  "tetra.holo.craft.materials.stat.requiredTools": "材料需求以下基础工具等级",
+  "tetra.holo.craft.materials.stat.attributes": "材料拥有以下属性",
+  "tetra.holo.craft.materials.stat.aspects": "特色",
+  "tetra.holo.craft.materials.stat.improvements": "此材料自带的改进",
+  "tetra.holo.craft.materials.stat.toolEfficiency": "工具效率",
+  "tetra.holo.craft.materials.stat.toolLevel": "工具等级",
+  "tetra.holo.craft.materials.stat.integrityGain": "基础完整度奖励",
+  "tetra.holo.craft.materials.stat.integrityCost": "基础完整度花费",
+  "tetra.holo.craft.materials.stat.durability": "基础耐久度"
 }

@@ -10,8 +10,13 @@ import net.yiran.jeitetra.effect.ItemEffectIngredientHelper;
 import net.yiran.jeitetra.effect.ItemEffectIngredientRenderer;
 import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.effect.ItemEffectSimpleRecipeManagerPlugin;
+import net.yiran.jeitetra.material.MaterialIngredientHelper;
+import net.yiran.jeitetra.material.MaterialIngredientRenderer;
+import net.yiran.jeitetra.material.MaterialIngredientTypeWithSubtypes;
+import net.yiran.jeitetra.material.MaterialSimpleRecipeManagerPlugin;
 import net.yiran.jeitetra.recipe.ActionRecipeCategory;
 import net.yiran.jeitetra.recipe.EffectRecipeCategory;
+import net.yiran.jeitetra.recipe.MaterialRecipeCategory;
 import net.yiran.jeitetra.recipe.ReplacementRecipeCategory;
 import net.yiran.jeitetra.subtype.ModularSubtypeInterpreter;
 import net.yiran.jeitetra.subtype.ScrollSubtypeInterpreter;
@@ -37,6 +42,7 @@ public class TetraPlugin implements IModPlugin {
     @Override
     public void registerAdvanced(IAdvancedRegistration registration) {
         registration.addTypedRecipeManagerPlugin(EffectRecipeCategory.recipeType, ItemEffectSimpleRecipeManagerPlugin.INSTANCE);
+        registration.addTypedRecipeManagerPlugin(MaterialRecipeCategory.recipeType, MaterialSimpleRecipeManagerPlugin.INSTANCE);
     }
 
     @Override
@@ -53,7 +59,12 @@ public class TetraPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
-        registration.register(ItemEffectIngredientTypeWithSubtypes.INSTANCE, ShowAllEffects.get()?getAllEffects(): List.of(), ItemEffectIngredientHelper.INSTANCE, ItemEffectIngredientRenderer.INSTANCE);
+        registration.register(ItemEffectIngredientTypeWithSubtypes.INSTANCE,
+                ShowAllEffects.get() ? getAllEffects() : List.of(),
+                ItemEffectIngredientHelper.INSTANCE, ItemEffectIngredientRenderer.INSTANCE);
+        registration.register(MaterialIngredientTypeWithSubtypes.INSTANCE,
+                ShowAllMaterials.get() ? DataManager.instance.materialData.getData().values().stream().toList() : List.of()
+                , MaterialIngredientHelper.INSTANCE, MaterialIngredientRenderer.INSTANCE);
     }
 
     @Override
@@ -62,7 +73,8 @@ public class TetraPlugin implements IModPlugin {
         registration.addRecipeCategories(
                 new ActionRecipeCategory(guiHelper),
                 new ReplacementRecipeCategory(guiHelper),
-                new EffectRecipeCategory(guiHelper)
+                new EffectRecipeCategory(guiHelper),
+                new MaterialRecipeCategory(guiHelper)
         );
     }
 
@@ -79,6 +91,7 @@ public class TetraPlugin implements IModPlugin {
             }
             registration.addRecipes(ActionRecipeCategory.recipeType, flatData(DataManager.instance.actionData));
             registration.addRecipes(ReplacementRecipeCategory.recipeType, flatData(DataManager.instance.replacementData));
+            registration.addRecipes(MaterialRecipeCategory.recipeType, DataManager.instance.materialData.getData().values().stream().toList());
         });
     }
 
