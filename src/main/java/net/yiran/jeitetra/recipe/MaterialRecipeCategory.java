@@ -22,8 +22,8 @@ import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.material.MaterialIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.material.MaterialRecipeIngredientRenderer;
 import net.yiran.jeitetra.util.Drawables;
+import net.yiran.jeitetra.util.GuiCustomData;
 import net.yiran.jeitetra.util.GuiElementRecipeWidget;
-import net.yiran.jeitetra.util.GuiMaterialData;
 import se.mickelus.tetra.module.data.MaterialData;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class MaterialRecipeCategory extends AbstractRecipeCategory<MaterialData>
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, MaterialData recipe, IFocusGroup focuses) {
         IRecipesGui recipesGui = Internal.getJeiRuntime().getRecipesGui();
-        var element = new GuiMaterialData(0, 25, 175, 175, recipe);
+        var element = new GuiCustomData(0, 25, 175, 175, recipe);
         var widget = new GuiElementRecipeWidget(element, new ScreenPosition(0, 0), 175, 200);
         builder.addWidget(widget);
         builder.addGuiEventListener(widget);

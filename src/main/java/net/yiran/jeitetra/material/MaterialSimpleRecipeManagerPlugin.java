@@ -10,6 +10,7 @@ import java.util.List;
 
 public class MaterialSimpleRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<MaterialData> {
     public static final MaterialSimpleRecipeManagerPlugin INSTANCE = new MaterialSimpleRecipeManagerPlugin();
+
     @Override
     public boolean isHandledInput(ITypedIngredient<?> iTypedIngredient) {
         var z = iTypedIngredient.getItemStack();
@@ -25,20 +26,17 @@ public class MaterialSimpleRecipeManagerPlugin implements ISimpleRecipeManagerPl
     public List<MaterialData> getRecipesForInput(ITypedIngredient<?> iTypedIngredient) {
         var item = iTypedIngredient.getItemStack().get();
 
-        var keys = ((IModularItem)item.getItem()).getAllModules(item)
+        var keys = ((IModularItem) item.getItem()).getAllModules(item)
                 .stream()
-                .map(module -> module.getVariantData(item).key.replace(module.getKey().replace(module.getSlot()+"/","")+"/",""))
-                //.map(variantData -> variantData.key)
+                .map(module -> module.getVariantData(item).key)
                 .toList();
+
         return getAllRecipes()
                 .stream()
                 .filter(materialData ->
-                                keys.stream().anyMatch(s -> s.endsWith("/"+materialData.key))
-                        )
+                        keys.stream().anyMatch(s -> s.endsWith("/" + materialData.key))
+                )
                 .toList();
-        //return new ArrayList<>(((IModularItem)item.getItem()).getEffects(item));
-
-        //return List.of();
     }
 
     @Override

@@ -13,10 +13,10 @@ import se.mickelus.tetra.module.data.MaterialData;
 
 import java.util.stream.Collectors;
 
-public class GuiMaterialData extends GuiElement {
+public class GuiCustomData extends GuiElement {
     public int offsetY = 0;
 
-    public GuiMaterialData(int x, int y, int width, int height, MaterialData materialData) {
+    public GuiCustomData(int x, int y, int width, int height, MaterialData materialData) {
         super(x, y, width, height);
         addChild(new GuiBaseInfo(5, "durability", materialData.durability));
         addChild(new GuiBaseInfo(5, "primary", materialData.primary));
@@ -79,6 +79,61 @@ public class GuiMaterialData extends GuiElement {
                     .collect(Collectors.toMap(
                             e -> I18n.get("tetra.improvement." + e.getKey() + ".name"),
                             e -> e.getValue().toString()
+                    ))
+            ));
+        }
+
+    }
+
+    public GuiCustomData(int x, int y, int width, int height, ModuleData materialData) {
+        super(x, y, width, height);
+        var variantData = materialData.variantData();
+        addChild(new GuiBaseInfo(5, "durability", variantData.durability));
+        addChild(new GuiBaseInfo(5, "magicCapacity", variantData.magicCapacity));
+        addChild(new GuiBaseInfo(5, "integrity", variantData.integrity));
+
+        if (variantData.tools != null) {
+            addChild(new GuiMultiInfo(5, "hasTools", variantData.tools.getValues()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            t -> I18n.get("tetra.tool." + t.name()),
+                            t -> " [ " + variantData.tools.getLevel(t) + " , " + variantData.tools.getEfficiency(t) + " ]"
+                    ))
+            ));
+        }
+
+        if (variantData.attributes != null) {
+            Multimap<String, String> multimap = HashMultimap.create();
+            variantData.attributes
+                    .entries().stream()
+                    .forEach(e -> multimap.put(I18n.get(e.getKey().getDescriptionId()), getAttributeModifierValue(e.getValue())));
+            addChild(new GuiMultiInfo(5, "attributesT", multimap
+            ));
+        }
+
+        var effects = variantData.effects;
+        if(effects != null) {
+            var effectSet = effects.getValues();
+            if (!effectSet.isEmpty()) {
+                addChild(new GuiString(5, 0, I18n.get("tetra.holo.craft.materials.stat.effectsT")));
+                effectSet.forEach(itemEffect -> {
+                    addChild(
+                            new GuiEffectRecipe(
+                                    10, getNumChildren() * 10,
+                                    itemEffect,
+                                    effects.getLevel(itemEffect), effects.getEfficiency(itemEffect)
+                            )
+                    );
+                });
+            }
+        }
+
+        if (variantData.aspects != null&&!variantData.aspects.levelMap.isEmpty()) {
+            addChild(new GuiMultiInfo(5, "aspectsT", variantData.aspects.levelMap
+                    .entrySet().stream()
+                    .collect(Collectors.toMap(
+                            e -> I18n.get("tetra.aspect." + e.getKey().getKey()),
+                            e -> String.valueOf(e.getValue().intValue())
                     ))
             ));
         }

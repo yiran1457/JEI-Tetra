@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.effect.ItemEffectLangManager;
+import net.yiran.jeitetra.effect.ItemEffectRecipeIngredientRenderer;
 import net.yiran.jeitetra.util.Drawables;
 import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.effect.ItemEffect;
@@ -41,7 +42,9 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder iRecipeLayoutBuilder, ItemEffect itemEffect, IFocusGroup iFocusGroup) {
-        iRecipeLayoutBuilder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredient(ItemEffectIngredientTypeWithSubtypes.INSTANCE, itemEffect);
+        iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, (175 - 55) / 2, -1)
+                .setCustomRenderer(ItemEffectIngredientTypeWithSubtypes.INSTANCE, ItemEffectRecipeIngredientRenderer.INSTANCE)
+                .addIngredient(ItemEffectIngredientTypeWithSubtypes.INSTANCE, itemEffect);
         var items = getItems(itemEffect);
         if (items == null || items.isEmpty()) return;
         iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 5, 1).setBackground(Drawables.SLOT, 0, 0).addIngredients(VanillaTypes.ITEM_STACK, items);
@@ -82,9 +85,9 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
         var effect = recipe.getKey();
         var left = (this.getWidth() - font.width(effect)) / 2;
         guiGraphics.drawString(font, "§7" + effect, left, 10, -1);
-        var drawText = ItemEffectLangManager.instance.getName(recipe);
-        left = (this.getWidth() - font.width(drawText)) / 2;
-        guiGraphics.drawString(font, drawText, left, 0, -1);
+        //var drawText = ItemEffectLangManager.instance.getName(recipe);
+        //left = (this.getWidth() - font.width(drawText)) / 2;
+        //guiGraphics.drawString(font, drawText, left, 0, -1);
 
         if (I18n.exists(ItemEffectLangManager.instance.getDescKey(recipe))) {
             guiGraphics.drawWordWrap(font, FormattedText.of(I18n.get(ItemEffectLangManager.instance.getDescKey(recipe), prarm)), 6, 30, 175 - 12, -1);
