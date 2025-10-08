@@ -8,7 +8,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
-import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
@@ -16,12 +15,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.effect.ItemEffectLangManager;
 import net.yiran.jeitetra.effect.ItemEffectRecipeIngredientRenderer;
 import net.yiran.jeitetra.util.Drawables;
+import net.yiran.jeitetra.util.I18nWrapper;
+import net.yiran.jeitetra.util.ItemUtil;
 import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.effect.ItemEffect;
 
@@ -32,7 +32,6 @@ import java.util.Objects;
 public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
     public static RecipeType<ItemEffect> recipeType = RecipeType.create("jeitetra", "effect", ItemEffect.class);
     public Minecraft mc;
-    public static Object[] prarm = new String[]{"n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n", "n"};
 
     public EffectRecipeCategory(IGuiHelper guiHelper) {
         super(recipeType, Component.translatable("jeitetra.alleffect.title"),
@@ -58,17 +57,9 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
                 .filter(materialData -> materialData.effects.contains(itemEffect))
                 .map(materialData -> materialData.material.getPredicate())
                 .filter(Objects::nonNull)
-                .map(EffectRecipeCategory::getItems)
+                .map(ItemUtil::getItemsFromItemPredicate)
                 .flatMap(List::stream)
                 .toList();
-    }
-
-    public static List<ItemStack> getItems(ItemPredicate itemPredicate) {
-        if (itemPredicate.tag != null) {
-            return List.of(Ingredient.of(itemPredicate.tag).getItems());
-        } else {
-            return itemPredicate.items.stream().map(ItemStack::new).toList();
-        }
     }
 
     @Override
@@ -85,12 +76,9 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
         var effect = recipe.getKey();
         var left = (this.getWidth() - font.width(effect)) / 2;
         guiGraphics.drawString(font, "§7" + effect, left, 10, -1);
-        //var drawText = ItemEffectLangManager.instance.getName(recipe);
-        //left = (this.getWidth() - font.width(drawText)) / 2;
-        //guiGraphics.drawString(font, drawText, left, 0, -1);
 
         if (I18n.exists(ItemEffectLangManager.instance.getDescKey(recipe))) {
-            guiGraphics.drawWordWrap(font, FormattedText.of(I18n.get(ItemEffectLangManager.instance.getDescKey(recipe), prarm)), 6, 30, 175 - 12, -1);
+            guiGraphics.drawWordWrap(font, FormattedText.of(I18nWrapper.getWithDefParam(ItemEffectLangManager.instance.getDescKey(recipe))), 6, 30, 175 - 12, -1);
         } else {
             guiGraphics.drawString(font, "§7Cann't find any description in :", 6, 30, -1, false);
             guiGraphics.drawString(font, "§8jeitetra.effect." + effect + ".desc", 6, 40, -1, false);

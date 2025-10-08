@@ -24,8 +24,10 @@ import net.yiran.jeitetra.material.MaterialRecipeIngredientRenderer;
 import net.yiran.jeitetra.util.Drawables;
 import net.yiran.jeitetra.util.GuiCustomData;
 import net.yiran.jeitetra.util.GuiElementRecipeWidget;
+import net.yiran.jeitetra.util.ItemUtil;
 import se.mickelus.tetra.module.data.MaterialData;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @SuppressWarnings({"removal", "all"})
@@ -63,9 +65,9 @@ public class MaterialRecipeCategory extends AbstractRecipeCategory<MaterialData>
         iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 5, 1).setBackground(Drawables.SLOT, 0, 0).addIngredients(VanillaTypes.ITEM_STACK, items);
     }
 
+    @Nullable
     public static List<ItemStack> getItems(MaterialData data) {
-        if (data.material.getPredicate() == null) return null;
-        return EffectRecipeCategory.getItems(data.material.getPredicate());
+        return ItemUtil.getItemsFromItemPredicate(data.material.getPredicate());
     }
 
     @Override

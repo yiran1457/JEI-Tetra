@@ -1,10 +1,15 @@
 package net.yiran.jeitetra.material;
 
+import net.yiran.jeitetra.util.I18nWrapper;
 import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.module.data.MaterialData;
 
 public class MaterialDataHelper {
     public static final MaterialDataHelper INSTANCE = new MaterialDataHelper();
+
+    public String getMaterialName(MaterialData material) {
+        return I18nWrapper.get(getMaterialKey(material));
+    }
 
     public String getMaterialKey(MaterialData data) {
         return "tetra.material." + data.key;

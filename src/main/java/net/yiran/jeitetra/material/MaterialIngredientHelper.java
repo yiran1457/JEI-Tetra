@@ -15,7 +15,7 @@ public class MaterialIngredientHelper implements IIngredientHelper<MaterialData>
 
     @Override
     public String getDisplayName(MaterialData materialData) {
-        return materialData.key;
+        return MaterialDataHelper.INSTANCE.getMaterialName(materialData);
     }
 
     @Override

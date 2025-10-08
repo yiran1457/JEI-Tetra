@@ -1,5 +1,6 @@
 package net.yiran.jeitetra.effect;
 
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -68,8 +69,14 @@ public class ItemEffectIngredientRenderer implements IIngredientRenderer<ItemEff
     public List<Component> getTooltip(ItemEffect itemEffect, TooltipFlag tooltipFlag) {
         var effect = itemEffect.getKey();
         return List.of(
-                Component.translatable(ItemEffectLangManager.instance.getName(itemEffect)),
+                Component.translatable(ItemEffectLangManager.instance.getNameKey(itemEffect)),
                 Component.literal(effect)
         );
+    }
+
+    @Override
+    public void getTooltip(ITooltipBuilder tooltip, ItemEffect ingredient, TooltipFlag tooltipFlag) {
+        tooltip.add(Component.translatable(ItemEffectLangManager.instance.getNameKey(ingredient)));
+        tooltip.add(Component.literal(ingredient.getKey()));
     }
 }

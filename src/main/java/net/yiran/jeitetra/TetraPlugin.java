@@ -2,8 +2,11 @@ package net.yiran.jeitetra;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.yiran.jeitetra.effect.ItemEffectIngredientHelper;
@@ -59,6 +62,17 @@ public class TetraPlugin implements IModPlugin {
     }
 
     @Override
+    public void registerIngredientAliases(IIngredientAliasRegistration registration) {
+        var list = CreativeModeTabRegistry.getSortedCreativeModeTabs().stream()
+                .map(CreativeModeTab::getDisplayItems)
+                .flatMap(Collection::stream)
+                .filter(stack -> stack.is(ScrollItem.instance))
+                .toList();
+
+        registration.addAliases(VanillaTypes.ITEM_STACK, list, "scroll");
+    }
+
+    @Override
     public void registerIngredients(IModIngredientRegistration registration) {
         registration.register(ItemEffectIngredientTypeWithSubtypes.INSTANCE,
                 ShowAllEffects.get() ? getAllEffects() : List.of(),
@@ -87,8 +101,8 @@ public class TetraPlugin implements IModPlugin {
                 var clazz = ItemEffect.class;
                 var flied = clazz.getDeclaredField("effectMap");
                 flied.setAccessible(true);
-                var effects =  new ArrayList<>(((Map<String, ItemEffect>) flied.get(clazz)).values());
-                registration.addRecipes(EffectRecipeCategory.recipeType,effects);
+                var effects = new ArrayList<>(((Map<String, ItemEffect>) flied.get(clazz)).values());
+                registration.addRecipes(EffectRecipeCategory.recipeType, effects);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -96,28 +110,9 @@ public class TetraPlugin implements IModPlugin {
             registration.addRecipes(ReplacementRecipeCategory.recipeType, flatData(DataManager.instance.replacementData));
             registration.addRecipes(MaterialRecipeCategory.recipeType, DataManager.instance.materialData.getData().values().stream().toList());
             registration.addRecipes(ModuleRecipeCategory.recipeType, ModuleRegistry.instance.getAllModules().stream().flatMap(module ->
-                    Arrays.stream(module.getVariantData()).map(variantData -> new ModuleData(module,variantData))
-                    ).toList());
-        });
-    }
-
-    public <T> List<T> flatData(DataStore<T[]> store) {
-        return store
-                .getData()
-                .values()
-                .stream()
-                .flatMap(Arrays::stream)
-                .toList();
-    }
-
-    public void currentSchedule(Runnable run) {
-        if (TMRVLOAD) {
-            run.run();
-        } else if (FMLEnvironment.dist.isClient()) {
-            ClientScheduler.schedule(1, run);
-        } else {
-            ServerScheduler.schedule(1, run);
-        }
+                    Arrays.stream(module.getVariantData()).map(variantData -> new ModuleData(module, variantData))
+            ).toList());
+            });
     }
 
     @Override
@@ -141,6 +136,25 @@ public class TetraPlugin implements IModPlugin {
                         .toList()
         );
 
+    }
+
+    public <T> List<T> flatData(DataStore<T[]> store) {
+        return store
+                .getData()
+                .values()
+                .stream()
+                .flatMap(Arrays::stream)
+                .toList();
+    }
+
+    public void currentSchedule(Runnable run) {
+        if (TMRVLOAD) {
+            run.run();
+        } else if (FMLEnvironment.dist.isClient()) {
+            ClientScheduler.schedule(1, run);
+        } else {
+            ServerScheduler.schedule(1, run);
+        }
     }
 
     public static List<ItemEffect> getAllEffects() {

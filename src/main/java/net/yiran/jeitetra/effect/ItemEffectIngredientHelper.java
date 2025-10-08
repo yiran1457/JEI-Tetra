@@ -16,7 +16,7 @@ public class ItemEffectIngredientHelper implements IIngredientHelper<ItemEffect>
 
     @Override
     public String getDisplayName(ItemEffect itemEffect) {
-        return itemEffect.getKey();
+        return ItemEffectLangManager.instance.getName(itemEffect);
     }
 
     @Override

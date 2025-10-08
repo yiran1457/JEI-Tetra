@@ -28,7 +28,6 @@ public class ReplacementRecipeCategory  extends AbstractRecipeCategory<Replaceme
                 recipeType,
                 Component.translatable("jeitetra.replacement.title"),
                 guiHelper.createDrawableItemLike(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tetra:basic_workbench"))),
-                //new DrawableText("测！", 16, 16, -1),
                 Drawables.REPLACE_BACK_GROUND.getWidth()-12, Drawables.REPLACE_BACK_GROUND.getHeight()-12
         );
         mc = Minecraft.getInstance();
