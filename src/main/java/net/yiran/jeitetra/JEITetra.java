@@ -6,12 +6,9 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.yiran.jeitetra.compat.jade.TetraHammerToolHandler;
 import net.yiran.jeitetra.effect.ItemEffectLangManager;
 import org.slf4j.Logger;
-import snownee.jade.Jade;
 
 @Mod(JEITetra.MODID)
 @SuppressWarnings({"all", "removal"})
@@ -23,15 +20,9 @@ public class JEITetra {
     public JEITetra() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(ItemEffectLangManager.instance::onReload);
-        modEventBus.addListener(this::commonSetup);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         TMRVLOAD = ModList.get().isLoaded("toomanyrecipeviewers");
     }
 
-    public void commonSetup(FMLCommonSetupEvent event) {
-        if(ModList.get().isLoaded(Jade.MODID)){
-            TetraHammerToolHandler.init();
-        }
-    }
 
 }
