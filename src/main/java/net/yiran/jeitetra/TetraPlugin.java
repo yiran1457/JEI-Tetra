@@ -71,6 +71,14 @@ public class TetraPlugin implements IModPlugin {
                 .toList();
 
         registration.addAliases(VanillaTypes.ITEM_STACK, list, "scroll");
+        DataManager.instance.materialData.getData().values().stream()
+                .forEach(materialData -> {
+                    var items = ItemUtil.getItemsFromItemPredicate(materialData.material.getPredicate());
+                    if (items != null) {
+                        registration.addAliases(VanillaTypes.ITEM_STACK, items, materialData.category);
+                        registration.addAliases(VanillaTypes.ITEM_STACK, items, "material");
+                    }
+                });
     }
 
     @Override

@@ -25,8 +25,8 @@ public class ImprovementDataRecipeCategory extends AbstractRecipeCategory<Improv
 
     public ImprovementDataRecipeCategory(IGuiHelper guiHelper) {
         super(
-                recipeType, Component.translatable("jeitetra.material.title"),
-                guiHelper.createDrawableItemLike(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tetra:dragon_sinew"))), 175, 200
+                recipeType, Component.translatable("jeitetra.improvement.title"),
+                guiHelper.createDrawableItemLike(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tetra:planar_stabilizer"))), 175, 200
         );
     }
 
