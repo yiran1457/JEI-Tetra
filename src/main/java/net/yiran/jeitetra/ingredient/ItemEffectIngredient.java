@@ -1,20 +1,56 @@
-package net.yiran.jeitetra.effect;
+package net.yiran.jeitetra.ingredient;
 
-import mezz.jei.api.gui.builder.ITooltipBuilder;
-import mezz.jei.api.ingredients.IIngredientRenderer;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.TooltipFlag;
+import net.yiran.jeitetra.effect.ItemEffectLangManager;
+import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.effect.ItemEffect;
 import se.mickelus.tetra.gui.GuiTextures;
 
 import java.util.List;
 
-public class ItemEffectIngredientRenderer implements IIngredientRenderer<ItemEffect> {
-    public static final ItemEffectIngredientRenderer INSTANCE = new ItemEffectIngredientRenderer();
+@SuppressWarnings({"all", "removal"})
+public class ItemEffectIngredient implements BasicIngredient<ItemEffect> {
+    public static ItemEffectIngredient INSTANCE = new ItemEffectIngredient();
+
+    @Override
+    public String getDisplayName(ItemEffect itemEffect) {
+        return ItemEffectLangManager.instance.getName(itemEffect);
+    }
+
+    @Override
+    public String getUniqueId(ItemEffect itemEffect, UidContext uidContext) {
+        return itemEffect.getKey();
+    }
+
+    @Override
+    public ResourceLocation getResourceLocation(ItemEffect itemEffect) {
+        var name = itemEffect.getKey()
+                .replaceAll("([a-z])([A-Z])", "$1_$2")
+                .toLowerCase();
+        if (name.contains(":")) {
+            return new ResourceLocation(name);
+        }
+        return new ResourceLocation("tetra", name);
+    }
+
+    @Override
+    public ItemEffect copyIngredient(ItemEffect itemEffect) {
+        return itemEffect;
+    }
+
+    @Override
+    public String getErrorInfo(@Nullable ItemEffect itemEffect) {
+        if (itemEffect == null) {
+            return "itemEffect is null";
+        }
+        return "itemEffect error with " + itemEffect.getKey();
+    }
 
     @Override
     public void render(GuiGraphics guiGraphics, ItemEffect itemEffect) {
@@ -65,7 +101,6 @@ public class ItemEffectIngredientRenderer implements IIngredientRenderer<ItemEff
     }
 
     @Override
-    @SuppressWarnings("removal")
     public List<Component> getTooltip(ItemEffect itemEffect, TooltipFlag tooltipFlag) {
         var effect = itemEffect.getKey();
         return List.of(
@@ -75,8 +110,7 @@ public class ItemEffectIngredientRenderer implements IIngredientRenderer<ItemEff
     }
 
     @Override
-    public void getTooltip(ITooltipBuilder tooltip, ItemEffect ingredient, TooltipFlag tooltipFlag) {
-        tooltip.add(Component.translatable(ItemEffectLangManager.instance.getNameKey(ingredient)));
-        tooltip.add(Component.literal(ingredient.getKey()));
+    public Class<? extends ItemEffect> getIngredientClass() {
+        return ItemEffect.class;
     }
 }

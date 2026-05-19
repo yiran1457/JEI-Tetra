@@ -4,8 +4,8 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.common.Internal;
 import mezz.jei.library.focus.Focus;
 import mezz.jei.library.ingredients.TypedIngredient;
-import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.effect.ItemEffectLangManager;
+import net.yiran.jeitetra.ingredient.ItemEffectIngredient;
 import se.mickelus.mutil.gui.GuiClickable;
 import se.mickelus.mutil.gui.GuiString;
 import se.mickelus.tetra.effect.ItemEffect;
@@ -32,7 +32,7 @@ public class GuiEffectRecipe extends GuiClickable {
 
     public static void openRecipe(ItemEffect effect) {
         Internal.getJeiRuntime().getRecipesGui().show(
-                new Focus<>(RecipeIngredientRole.OUTPUT, TypedIngredient.createUnvalidated(ItemEffectIngredientTypeWithSubtypes.INSTANCE, effect))
+                new Focus<>(RecipeIngredientRole.OUTPUT, TypedIngredient.createUnvalidated(ItemEffectIngredient.INSTANCE, effect))
         );
     }
 }

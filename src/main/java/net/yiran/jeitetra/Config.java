@@ -13,6 +13,8 @@ public class Config
     public static final ForgeConfigSpec.ConfigValue<Boolean> OutputReplacementItem;
     public static final ForgeConfigSpec.ConfigValue<Boolean> ShowAllEffects;
     public static final ForgeConfigSpec.ConfigValue<Boolean> ShowAllMaterials;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> ShowAllImprovements;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> FilterEmptyReplacement;
     public static final ForgeConfigSpec.ConfigValue<List<String>> JeiSubtypeModularItem;
 
     static {
@@ -24,6 +26,10 @@ public class Config
                 .define("ShowAllEffects", true);
         ShowAllMaterials = BUILDER
                 .define("ShowAllMaterials", false);
+        ShowAllImprovements = BUILDER
+                .define("ShowAllImprovements", false);
+        FilterEmptyReplacement = BUILDER
+                .define("FilterEmptyReplacement", true);
         JeiSubtypeModularItem = BUILDER
                 .define("JeiSubtypeModularItem", Arrays.asList(
                         "tetra:modular_toolbelt",

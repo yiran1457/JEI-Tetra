@@ -14,9 +14,10 @@ import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
+import net.yiran.jeitetra.ingredient.ImprovementDataIngredient;
+import net.yiran.jeitetra.ingredient.ItemEffectIngredient;
+import net.yiran.jeitetra.ingredient.MaterialDataIngredient;
 import net.yiran.jeitetra.material.MaterialDataHelper;
-import net.yiran.jeitetra.material.MaterialIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.util.GuiCustomData;
 import net.yiran.jeitetra.util.GuiElementRecipeWidget;
 import net.yiran.jeitetra.util.ModuleData;
@@ -24,6 +25,7 @@ import se.mickelus.tetra.module.ItemModule;
 import se.mickelus.tetra.module.ItemModuleMajor;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class ModuleRecipeCategory extends AbstractRecipeCategory<ModuleData> {
     public static RecipeType<ModuleData> recipeType = RecipeType.create("jeitetra", "module", ModuleData.class);
@@ -39,21 +41,24 @@ public class ModuleRecipeCategory extends AbstractRecipeCategory<ModuleData> {
     public void setRecipe(IRecipeLayoutBuilder iRecipeLayoutBuilder, ModuleData moduleData, IFocusGroup iFocusGroup) {
         if (moduleData.variantData().effects != null)
             iRecipeLayoutBuilder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-                    .addIngredients(ItemEffectIngredientTypeWithSubtypes.INSTANCE, moduleData.variantData().effects.getValues().stream().toList());
+                    .addIngredients(ItemEffectIngredient.INSTANCE, moduleData.variantData().effects.getValues().stream().toList());
         var data = MaterialDataHelper.INSTANCE.getMaterialData(moduleData.variantData().key);
+        if(moduleData.itemModule() instanceof ItemModuleMajor moduleMajor){
+            iRecipeLayoutBuilder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
+                    .addIngredients(ImprovementDataIngredient.INSTANCE, Arrays.stream(moduleMajor.improvements).toList());
+
+        }
         if (data != null)
             iRecipeLayoutBuilder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
-                    .addIngredient(MaterialIngredientTypeWithSubtypes.INSTANCE, MaterialDataHelper.INSTANCE.getMaterialData(moduleData.variantData().key));
+                    .addIngredient(MaterialDataIngredient.INSTANCE, MaterialDataHelper.INSTANCE.getMaterialData(moduleData.variantData().key));
     }
 
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, ModuleData recipe, IFocusGroup focuses) {
-        var element = new GuiCustomData(0, 25, 175, 175, recipe);
+        var element = new GuiCustomData(0, 25, 175, 175, recipe.variantData());
         var widget = new GuiElementRecipeWidget(element, new ScreenPosition(0, 0), 175, 200);
         builder.addWidget(widget);
         builder.addGuiEventListener(widget);
-        super.createRecipeExtras(builder, recipe, focuses);
-        super.createRecipeExtras(builder, recipe, focuses);
     }
 
     @Override

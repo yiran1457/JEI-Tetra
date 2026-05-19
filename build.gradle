@@ -2,7 +2,8 @@ plugins {
     id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev.legacyforge' version '2.0.91'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.140'
+    id("net.minecraftforge.accesstransformers") version "5.0.3"
     //id 'net.neoforged.moddev.legacyforge' version '2.0.107'
 }
 
@@ -39,7 +40,7 @@ legacyForge {
     }
 
     // This line is optional. Access Transformers are automatically detected
-    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformers = project.files(atfile)
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -129,8 +130,13 @@ dependencies {
     //jarJar("curse.maven:modern-ui-352491:6199942")
     modImplementation("curse.maven:ibe-editor-256822:4994072")
     modImplementation("curse.maven:mutil-351914:6418901")
-    modImplementation("curse.maven:tetra-289712:6418957")
+    modImplementation("curse.maven:tetra-289712:6418957") {
+        accessTransformers.configure(it) {
+            config = project.file(atfile)
+        }
+    }
     modImplementation("curse.maven:just-enough-characters-250702:6680042")
+    modCompileOnly("curse.maven:tetraextend-enchant-1545513:8106405")
 }
 
 // Uncomment the lines below if you wish to configure mixin. The mixin file should be named modid.mixins.json.

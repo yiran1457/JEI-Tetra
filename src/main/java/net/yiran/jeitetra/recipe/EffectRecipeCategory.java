@@ -16,9 +16,9 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
 import net.yiran.jeitetra.effect.ItemEffectLangManager;
-import net.yiran.jeitetra.effect.ItemEffectRecipeIngredientRenderer;
+import net.yiran.jeitetra.ingredient.ItemEffectIngredient;
+import net.yiran.jeitetra.ingredient.renderer.ItemEffectRecipeIngredientRenderer;
 import net.yiran.jeitetra.util.Drawables;
 import net.yiran.jeitetra.util.I18nWrapper;
 import net.yiran.jeitetra.util.ItemUtil;
@@ -42,8 +42,8 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder iRecipeLayoutBuilder, ItemEffect itemEffect, IFocusGroup iFocusGroup) {
         iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, (175 - 55) / 2, -1)
-                .setCustomRenderer(ItemEffectIngredientTypeWithSubtypes.INSTANCE, ItemEffectRecipeIngredientRenderer.INSTANCE)
-                .addIngredient(ItemEffectIngredientTypeWithSubtypes.INSTANCE, itemEffect);
+                .setCustomRenderer(ItemEffectIngredient.INSTANCE, ItemEffectRecipeIngredientRenderer.INSTANCE)
+                .addIngredient(ItemEffectIngredient.INSTANCE, itemEffect);
         var items = getItems(itemEffect);
         if (items == null || items.isEmpty()) return;
         iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 5, 1).setBackground(Drawables.SLOT, 0, 0).addIngredients(VanillaTypes.ITEM_STACK, items);

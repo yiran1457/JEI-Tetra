@@ -12,10 +12,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.yiran.jeitetra.util.Drawables;
+import net.yiran.jeitetra.util.ItemUtil;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.mutil.gui.GuiString;
 import se.mickelus.tetra.blocks.workbench.action.ConfigActionImpl;
@@ -41,11 +40,9 @@ public class ActionRecipeCategory extends AbstractRecipeCategory<ConfigActionImp
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ConfigActionImpl configAction, IFocusGroup iFocusGroup) {
         IRecipeSlotBuilder inputSlotBuilder = builder.addInputSlot(66, 1).setBackground(Drawables.SLOT,0,0);//.setStandardSlotBackground();
-        if (configAction.requirement.tag != null) {
-            inputSlotBuilder.addIngredients(Ingredient.of(configAction.requirement.tag));
-        } else {
-            inputSlotBuilder.addIngredients(Ingredient.of(configAction.requirement.items.stream().map(ItemStack::new)));
-        }
+        var items = ItemUtil.getItemsFromItemPredicate(configAction.requirement);
+        if (items == null || items.isEmpty()) return;
+        inputSlotBuilder.addItemStacks(items);
     }
 
     @Override

@@ -9,19 +9,19 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.yiran.jeitetra.effect.ItemEffectIngredientHelper;
-import net.yiran.jeitetra.effect.ItemEffectIngredientRenderer;
-import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
-import net.yiran.jeitetra.effect.ItemEffectSimpleRecipeManagerPlugin;
+import net.yiran.jeitetra.ingredient.ImprovementDataIngredient;
+import net.yiran.jeitetra.ingredient.ItemEffectIngredient;
+import net.yiran.jeitetra.ingredient.MaterialDataIngredient;
 import net.yiran.jeitetra.itemsubtype.ModularSubtypeInterpreter;
 import net.yiran.jeitetra.itemsubtype.ScrollSubtypeInterpreter;
-import net.yiran.jeitetra.material.MaterialIngredientHelper;
-import net.yiran.jeitetra.material.MaterialIngredientRenderer;
-import net.yiran.jeitetra.material.MaterialIngredientTypeWithSubtypes;
-import net.yiran.jeitetra.material.MaterialSimpleRecipeManagerPlugin;
-import net.yiran.jeitetra.module.ModuleSimpleRecipeManagerPlugin;
 import net.yiran.jeitetra.recipe.*;
+import net.yiran.jeitetra.recipemanager.ImprovementSimpleRecipeManagerPlugin;
+import net.yiran.jeitetra.recipemanager.ItemEffectSimpleRecipeManagerPlugin;
+import net.yiran.jeitetra.recipemanager.MaterialSimpleRecipeManagerPlugin;
+import net.yiran.jeitetra.recipemanager.ModuleSimpleRecipeManagerPlugin;
+import net.yiran.jeitetra.util.ItemUtil;
 import net.yiran.jeitetra.util.ModuleData;
+import net.yiran.jeitetra.util.helper.ImprovementDataHelper;
 import se.mickelus.mutil.data.DataStore;
 import se.mickelus.tetra.ClientScheduler;
 import se.mickelus.tetra.ServerScheduler;
@@ -47,6 +47,7 @@ public class TetraPlugin implements IModPlugin {
         registration.addTypedRecipeManagerPlugin(EffectRecipeCategory.recipeType, ItemEffectSimpleRecipeManagerPlugin.INSTANCE);
         registration.addTypedRecipeManagerPlugin(MaterialRecipeCategory.recipeType, MaterialSimpleRecipeManagerPlugin.INSTANCE);
         registration.addTypedRecipeManagerPlugin(ModuleRecipeCategory.recipeType, ModuleSimpleRecipeManagerPlugin.INSTANCE);
+        registration.addTypedRecipeManagerPlugin(ImprovementDataRecipeCategory.recipeType, ImprovementSimpleRecipeManagerPlugin.INSTANCE);
     }
 
     @Override
@@ -74,12 +75,16 @@ public class TetraPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
-        registration.register(ItemEffectIngredientTypeWithSubtypes.INSTANCE,
+        ImprovementDataHelper.ClearCache();
+        registration.register(ItemEffectIngredient.INSTANCE,
                 ShowAllEffects.get() ? getAllEffects() : List.of(),
-                ItemEffectIngredientHelper.INSTANCE, ItemEffectIngredientRenderer.INSTANCE);
-        registration.register(MaterialIngredientTypeWithSubtypes.INSTANCE,
-                ShowAllMaterials.get() ? DataManager.instance.materialData.getData().values().stream().toList() : List.of()
-                , MaterialIngredientHelper.INSTANCE, MaterialIngredientRenderer.INSTANCE);
+                ItemEffectIngredient.INSTANCE, ItemEffectIngredient.INSTANCE);
+        registration.register(MaterialDataIngredient.INSTANCE,
+                ShowAllMaterials.get() ? DataManager.instance.materialData.getData().values().stream().toList() : List.of(),
+                MaterialDataIngredient.INSTANCE, MaterialDataIngredient.INSTANCE);
+        registration.register(ImprovementDataIngredient.INSTANCE,
+                ShowAllImprovements.get() ? DataManager.instance.improvementData.getData().values().stream().flatMap(Arrays::stream).toList() : List.of(),
+                ImprovementDataIngredient.INSTANCE, ImprovementDataIngredient.INSTANCE);
     }
 
     @Override
@@ -90,29 +95,35 @@ public class TetraPlugin implements IModPlugin {
                 new ReplacementRecipeCategory(guiHelper),
                 new EffectRecipeCategory(guiHelper),
                 new MaterialRecipeCategory(guiHelper),
-                new ModuleRecipeCategory(guiHelper)
+                new ModuleRecipeCategory(guiHelper),
+                new ImprovementDataRecipeCategory(guiHelper)
         );
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         currentSchedule(() -> {
-            try {
-                var clazz = ItemEffect.class;
-                var flied = clazz.getDeclaredField("effectMap");
-                flied.setAccessible(true);
-                var effects = new ArrayList<>(((Map<String, ItemEffect>) flied.get(clazz)).values());
-                registration.addRecipes(EffectRecipeCategory.recipeType, effects);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            registration.addRecipes(EffectRecipeCategory.recipeType, getAllEffects());
             registration.addRecipes(ActionRecipeCategory.recipeType, flatData(DataManager.instance.actionData));
-            registration.addRecipes(ReplacementRecipeCategory.recipeType, flatData(DataManager.instance.replacementData));
+            registration.addRecipes(ReplacementRecipeCategory.recipeType,
+                    DataManager.instance.replacementData.getData().values()
+                            .stream()
+                            .flatMap(Arrays::stream)
+                            .filter(replacementDefinition -> {
+                                if (FilterEmptyReplacement.get()) {
+                                    var items = ItemUtil.getItemsFromItemPredicate(replacementDefinition.predicate);
+                                    return items != null && !items.isEmpty();
+                                }
+                                return true;
+                            })
+                            .toList()
+            );
+            registration.addRecipes(ImprovementDataRecipeCategory.recipeType, flatData(DataManager.instance.improvementData));
             registration.addRecipes(MaterialRecipeCategory.recipeType, DataManager.instance.materialData.getData().values().stream().toList());
             registration.addRecipes(ModuleRecipeCategory.recipeType, ModuleRegistry.instance.getAllModules().stream().flatMap(module ->
                     Arrays.stream(module.getVariantData()).map(variantData -> new ModuleData(module, variantData))
             ).toList());
-            });
+        });
     }
 
     @Override
@@ -158,13 +169,6 @@ public class TetraPlugin implements IModPlugin {
     }
 
     public static List<ItemEffect> getAllEffects() {
-        try {
-            var clazz = ItemEffect.class;
-            var field = clazz.getDeclaredField("effectMap");
-            field.setAccessible(true);
-            return new ArrayList<>(((Map<String, ItemEffect>) field.get(clazz)).values());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return new ArrayList<>(ItemEffect.effectMap.values());
     }
 }

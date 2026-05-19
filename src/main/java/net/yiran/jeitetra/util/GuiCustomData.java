@@ -6,10 +6,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.yiran.jeitetra.compat.ExtendEnchantCompat;
 import org.joml.Vector4f;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.mutil.gui.GuiString;
 import se.mickelus.tetra.module.data.MaterialData;
+import se.mickelus.tetra.module.data.VariantData;
 
 import java.util.stream.Collectors;
 
@@ -83,11 +85,13 @@ public class GuiCustomData extends GuiElement {
             ));
         }
 
+        ExtendEnchantCompat.addMaterialData(this, materialData);
+
     }
 
-    public GuiCustomData(int x, int y, int width, int height, ModuleData materialData) {
+    public GuiCustomData(int x, int y, int width, int height, VariantData variantData) {
         super(x, y, width, height);
-        var variantData = materialData.variantData();
+
         addChild(new GuiBaseInfo(5, "durability", variantData.durability));
         addChild(new GuiBaseInfo(5, "magicCapacity", variantData.magicCapacity));
         addChild(new GuiBaseInfo(5, "integrity", variantData.integrity));
@@ -137,6 +141,8 @@ public class GuiCustomData extends GuiElement {
                     ))
             ));
         }
+
+        ExtendEnchantCompat.addVariantData(this, variantData);
 
     }
 

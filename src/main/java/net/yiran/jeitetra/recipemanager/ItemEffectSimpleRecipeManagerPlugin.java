@@ -1,4 +1,4 @@
-package net.yiran.jeitetra.effect;
+package net.yiran.jeitetra.recipemanager;
 
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin;

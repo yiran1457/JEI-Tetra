@@ -1,17 +1,49 @@
-package net.yiran.jeitetra.material;
+package net.yiran.jeitetra.ingredient;
 
-import mezz.jei.api.ingredients.IIngredientRenderer;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.TooltipFlag;
+import net.yiran.jeitetra.material.MaterialDataHelper;
+import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.module.data.MaterialData;
 
 import java.util.List;
 
-public class MaterialIngredientRenderer implements IIngredientRenderer<MaterialData> {
-    public static final MaterialIngredientRenderer INSTANCE = new MaterialIngredientRenderer();
+@SuppressWarnings({"all", "removal"})
+public class MaterialDataIngredient implements BasicIngredient<MaterialData> {
+    public static MaterialDataIngredient INSTANCE = new MaterialDataIngredient();
+
+    @Override
+    public String getDisplayName(MaterialData materialData) {
+        return MaterialDataHelper.INSTANCE.getMaterialName(materialData);
+    }
+
+    @Override
+    public String getUniqueId(MaterialData materialData, UidContext uidContext) {
+        return materialData.key;
+    }
+
+    @Override
+    public ResourceLocation getResourceLocation(MaterialData materialData) {
+        return new ResourceLocation("tetra", "material");
+    }
+
+    @Override
+    public MaterialData copyIngredient(MaterialData materialData) {
+        return materialData;
+    }
+
+    @Override
+    public String getErrorInfo(@Nullable MaterialData materialData) {
+        if (materialData == null) {
+            return "materialData is null";
+        }
+        return "materialData error with " + materialData.key;
+    }
 
     @Override
     public void render(GuiGraphics guiGraphics, MaterialData materialData) {
@@ -45,11 +77,15 @@ public class MaterialIngredientRenderer implements IIngredientRenderer<MaterialD
     }
 
     @Override
-    @SuppressWarnings("removal")
     public List<Component> getTooltip(MaterialData materialData, TooltipFlag tooltipFlag) {
         return List.of(
                 Component.translatable(MaterialDataHelper.INSTANCE.getMaterialKey(materialData)),
                 Component.translatable(MaterialDataHelper.INSTANCE.getMaterialCategoryKey(materialData))
         );
+    }
+
+    @Override
+    public Class<? extends MaterialData> getIngredientClass() {
+        return MaterialData.class;
     }
 }

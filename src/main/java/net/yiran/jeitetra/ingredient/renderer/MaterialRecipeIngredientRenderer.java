@@ -1,4 +1,4 @@
-package net.yiran.jeitetra.material;
+package net.yiran.jeitetra.ingredient.renderer;
 
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.client.Minecraft;
@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
+import net.yiran.jeitetra.material.MaterialDataHelper;
 import se.mickelus.tetra.module.data.MaterialData;
 
 import java.util.List;

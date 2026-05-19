@@ -18,9 +18,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.yiran.jeitetra.effect.ItemEffectIngredientTypeWithSubtypes;
-import net.yiran.jeitetra.material.MaterialIngredientTypeWithSubtypes;
-import net.yiran.jeitetra.material.MaterialRecipeIngredientRenderer;
+import net.yiran.jeitetra.ingredient.ItemEffectIngredient;
+import net.yiran.jeitetra.ingredient.MaterialDataIngredient;
+import net.yiran.jeitetra.ingredient.renderer.MaterialRecipeIngredientRenderer;
 import net.yiran.jeitetra.util.Drawables;
 import net.yiran.jeitetra.util.GuiCustomData;
 import net.yiran.jeitetra.util.GuiElementRecipeWidget;
@@ -56,10 +56,10 @@ public class MaterialRecipeCategory extends AbstractRecipeCategory<MaterialData>
     public void setRecipe(IRecipeLayoutBuilder iRecipeLayoutBuilder, MaterialData materialData, IFocusGroup iFocusGroup) {
         var effects = materialData.effects.getValues();
         if (!effects.isEmpty())
-            iRecipeLayoutBuilder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredients(ItemEffectIngredientTypeWithSubtypes.INSTANCE, effects.stream().toList());
+            iRecipeLayoutBuilder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredients(ItemEffectIngredient.INSTANCE, effects.stream().toList());
         iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, (175 - 55) / 2, 1)
-                .setCustomRenderer(MaterialIngredientTypeWithSubtypes.INSTANCE, MaterialRecipeIngredientRenderer.INSTANCE)
-                .addIngredient(MaterialIngredientTypeWithSubtypes.INSTANCE, materialData);
+                .setCustomRenderer(MaterialDataIngredient.INSTANCE, MaterialRecipeIngredientRenderer.INSTANCE)
+                .addIngredient(MaterialDataIngredient.INSTANCE, materialData);
         var items = getItems(materialData);
         if (items == null || items.isEmpty()) return;
         iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 5, 1).setBackground(Drawables.SLOT, 0, 0).addIngredients(VanillaTypes.ITEM_STACK, items);
