@@ -61,5 +61,6 @@
   "tetra.stats.strikingHoe": "goto:tetra.stats.strikingAxe",
   "tetra.stats.strikingHoe.tooltip": "goto:tetra.stats.strikingAxe.tooltip",
   "tetra.stats.strikingShovel": "goto:tetra.stats.strikingAxe",
-  "tetra.stats.strikingShovel.tooltip": "goto:tetra.stats.strikingAxe.tooltip"
+  "tetra.stats.strikingShovel.tooltip": "goto:tetra.stats.strikingAxe.tooltip",
+  "tetra.holo.craft.materials.stat.enchantmentsT": "has Enchantments"
 }

@@ -20,5 +20,6 @@
   "tetra.holo.craft.materials.stat.toolLevel": "工具等级",
   "tetra.holo.craft.materials.stat.integrityGain": "基础完整度奖励",
   "tetra.holo.craft.materials.stat.integrityCost": "基础完整度花费",
-  "tetra.holo.craft.materials.stat.durability": "基础耐久度"
+  "tetra.holo.craft.materials.stat.durability": "基础耐久度",
+  "tetra.holo.craft.materials.stat.enchantmentsT": "有以下附魔"
 }
