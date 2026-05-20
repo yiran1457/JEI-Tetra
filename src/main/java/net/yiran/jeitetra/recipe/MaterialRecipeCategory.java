@@ -9,8 +9,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
-import mezz.jei.api.runtime.IRecipesGui;
-import mezz.jei.common.Internal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenPosition;
@@ -44,7 +42,6 @@ public class MaterialRecipeCategory extends AbstractRecipeCategory<MaterialData>
 
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, MaterialData recipe, IFocusGroup focuses) {
-        IRecipesGui recipesGui = Internal.getJeiRuntime().getRecipesGui();
         var element = new GuiCustomData(0, 25, 175, 175, recipe);
         var widget = new GuiElementRecipeWidget(element, new ScreenPosition(0, 0), 175, 200);
         builder.addWidget(widget);

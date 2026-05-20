@@ -10,7 +10,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
@@ -77,7 +76,7 @@ public class EffectRecipeCategory extends AbstractRecipeCategory<ItemEffect> {
         var left = (this.getWidth() - font.width(effect)) / 2;
         guiGraphics.drawString(font, "§7" + effect, left, 10, -1);
 
-        if (I18n.exists(ItemEffectLangManager.instance.getDescKey(recipe))) {
+        if (I18nWrapper.exists(ItemEffectLangManager.instance.getDescKey(recipe))) {
             guiGraphics.drawWordWrap(font, FormattedText.of(I18nWrapper.getWithDefParam(ItemEffectLangManager.instance.getDescKey(recipe))), 6, 30, 175 - 12, -1);
         } else {
             guiGraphics.drawString(font, "§7Cann't find any description in :", 6, 30, -1, false);

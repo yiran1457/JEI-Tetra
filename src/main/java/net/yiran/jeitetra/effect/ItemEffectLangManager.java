@@ -1,8 +1,8 @@
 package net.yiran.jeitetra.effect;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.util.Unit;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.yiran.jeitetra.util.I18nWrapper;
 import se.mickelus.tetra.effect.ItemEffect;
 
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class ItemEffectLangManager {
     }
 
     public String getName(ItemEffect itemEffect) {
-        return I18n.get(getNameKey(itemEffect));
+        return I18nWrapper.get(getNameKey(itemEffect));
     }
 
     public String getNameKey(ItemEffect effect) {
@@ -55,8 +55,8 @@ public class ItemEffectLangManager {
     }
 
     public String getEndLang(String key) {
-        if (!I18n.exists(key)) return key;
-        String lang = I18n.get(key);
+        if (!I18nWrapper.exists(key)) return key;
+        String lang = I18nWrapper.get(key);
         if (lang.startsWith("goto:")) {
             return getEndLang(lang.substring(5));
         }

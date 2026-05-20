@@ -3,9 +3,9 @@ package net.yiran.jeitetra.ingredient.renderer;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
+import net.yiran.jeitetra.util.I18nWrapper;
 import se.mickelus.tetra.items.modular.IModularItem;
 import se.mickelus.tetra.module.data.ImprovementData;
 
@@ -28,7 +28,7 @@ public class ImprovementRecipeIngredientRenderer implements IIngredientRenderer<
     public void render(GuiGraphics guiGraphics, ImprovementData improvementData) {
         var font = Minecraft.getInstance().font;
         var color = (improvementData.key.hashCode() & 0x00FFFFFF) | 0xCC000000;
-        String drawString = I18n.get(IModularItem.getImprovementName(improvementData.key, improvementData.level));
+        String drawString = I18nWrapper.get(IModularItem.getImprovementName(improvementData.key, improvementData.level));
         var z = drawString;
         guiGraphics.pose().pushPose();
 

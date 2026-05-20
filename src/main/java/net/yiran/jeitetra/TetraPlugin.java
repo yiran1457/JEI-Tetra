@@ -71,7 +71,7 @@ public class TetraPlugin implements IModPlugin {
                 .toList();
 
         registration.addAliases(VanillaTypes.ITEM_STACK, list, "scroll");
-        DataManager.instance.materialData.getData().values().stream()
+        DataManager.instance.materialData.getData().values()
                 .forEach(materialData -> {
                     var items = ItemUtil.getItemsFromItemPredicate(materialData.material.getPredicate());
                     if (items != null) {
@@ -91,7 +91,7 @@ public class TetraPlugin implements IModPlugin {
                 ShowAllMaterials.get() ? DataManager.instance.materialData.getData().values().stream().toList() : List.of(),
                 MaterialDataIngredient.INSTANCE, MaterialDataIngredient.INSTANCE);
         registration.register(ImprovementDataIngredient.INSTANCE,
-                ShowAllImprovements.get() ? DataManager.instance.improvementData.getData().values().stream().flatMap(Arrays::stream).toList() : List.of(),
+                ShowAllImprovements.get() ? flatData(DataManager.instance.improvementData) : List.of(),
                 ImprovementDataIngredient.INSTANCE, ImprovementDataIngredient.INSTANCE);
     }
 

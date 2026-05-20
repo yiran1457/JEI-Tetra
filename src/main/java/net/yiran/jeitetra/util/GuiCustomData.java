@@ -3,7 +3,6 @@ package net.yiran.jeitetra.util;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.yiran.jeitetra.compat.ExtendEnchantCompat;
@@ -35,7 +34,7 @@ public class GuiCustomData extends GuiElement {
             addChild(new GuiMultiInfo(5, "requiredTools", materialData.requiredTools.levelMap
                     .entrySet().stream()
                     .collect(Collectors.toMap(
-                            e -> I18n.get("tetra.tool." + e.getKey().name()),
+                            e -> I18nWrapper.get("tetra.tool." + e.getKey().name()),
                             e -> e.getValue().toString()
                     ))
             ));
@@ -45,7 +44,7 @@ public class GuiCustomData extends GuiElement {
             Multimap<String, String> multimap = HashMultimap.create();
             materialData.attributes
                     .entries().stream()
-                    .forEach(e -> multimap.put(I18n.get(e.getKey().getDescriptionId()), getAttributeModifierValue(e.getValue())));
+                    .forEach(e -> multimap.put(I18nWrapper.get(e.getKey().getDescriptionId()), getAttributeModifierValue(e.getValue())));
             addChild(new GuiMultiInfo(5, "attributes", multimap
             ));
         }
@@ -53,7 +52,7 @@ public class GuiCustomData extends GuiElement {
         var effects = materialData.effects;
         var effectSet = effects.getValues();
         if (!effectSet.isEmpty()) {
-            addChild(new GuiString(5, 0, I18n.get("tetra.holo.craft.materials.stat.effects")));
+            addChild(new GuiString(5, 0, I18nWrapper.get("tetra.holo.craft.materials.stat.effects")));
             effectSet.forEach(itemEffect -> {
                 addChild(
                         new GuiEffectRecipe(
@@ -69,7 +68,7 @@ public class GuiCustomData extends GuiElement {
             addChild(new GuiMultiInfo(5, "aspects", materialData.aspects.levelMap
                     .entrySet().stream()
                     .collect(Collectors.toMap(
-                            e -> I18n.get("tetra.aspect." + e.getKey().getKey()),
+                            e -> I18nWrapper.get("tetra.aspect." + e.getKey().getKey()),
                             e -> String.valueOf(e.getValue().intValue())
                     ))
             ));
@@ -79,7 +78,7 @@ public class GuiCustomData extends GuiElement {
             addChild(new GuiMultiInfo(5, "improvements", materialData.improvements
                     .entrySet().stream()
                     .collect(Collectors.toMap(
-                            e -> I18n.get("tetra.improvement." + e.getKey() + ".name"),
+                            e -> I18nWrapper.get("tetra.improvement." + e.getKey() + ".name"),
                             e -> e.getValue().toString()
                     ))
             ));
@@ -100,7 +99,7 @@ public class GuiCustomData extends GuiElement {
             addChild(new GuiMultiInfo(5, "hasTools", variantData.tools.getValues()
                     .stream()
                     .collect(Collectors.toMap(
-                            t -> I18n.get("tetra.tool." + t.name()),
+                            t -> I18nWrapper.get("tetra.tool." + t.name()),
                             t -> " [ " + variantData.tools.getLevel(t) + " , " + variantData.tools.getEfficiency(t) + " ]"
                     ))
             ));
@@ -110,7 +109,7 @@ public class GuiCustomData extends GuiElement {
             Multimap<String, String> multimap = HashMultimap.create();
             variantData.attributes
                     .entries().stream()
-                    .forEach(e -> multimap.put(I18n.get(e.getKey().getDescriptionId()), getAttributeModifierValue(e.getValue())));
+                    .forEach(e -> multimap.put(I18nWrapper.get(e.getKey().getDescriptionId()), getAttributeModifierValue(e.getValue())));
             addChild(new GuiMultiInfo(5, "attributesT", multimap
             ));
         }
@@ -119,7 +118,7 @@ public class GuiCustomData extends GuiElement {
         if(effects != null) {
             var effectSet = effects.getValues();
             if (!effectSet.isEmpty()) {
-                addChild(new GuiString(5, 0, I18n.get("tetra.holo.craft.materials.stat.effectsT")));
+                addChild(new GuiString(5, 0, I18nWrapper.get("tetra.holo.craft.materials.stat.effectsT")));
                 effectSet.forEach(itemEffect -> {
                     addChild(
                             new GuiEffectRecipe(
@@ -136,7 +135,7 @@ public class GuiCustomData extends GuiElement {
             addChild(new GuiMultiInfo(5, "aspectsT", variantData.aspects.levelMap
                     .entrySet().stream()
                     .collect(Collectors.toMap(
-                            e -> I18n.get("tetra.aspect." + e.getKey().getKey()),
+                            e -> I18nWrapper.get("tetra.aspect." + e.getKey().getKey()),
                             e -> String.valueOf(e.getValue().intValue())
                     ))
             ));

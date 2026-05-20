@@ -3,10 +3,10 @@ package net.yiran.jeitetra.ingredient.renderer;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 import net.yiran.jeitetra.effect.ItemEffectLangManager;
+import net.yiran.jeitetra.util.I18nWrapper;
 import se.mickelus.tetra.effect.ItemEffect;
 
 import java.util.List;
@@ -31,8 +31,8 @@ public class ItemEffectRecipeIngredientRenderer implements IIngredientRenderer<I
         var effect = itemEffect.getKey();
         var color = (effect.hashCode() & 0x00FFFFFF) | 0xCC000000;
         String langKey;
-        if (I18n.exists(langKey = ItemEffectLangManager.instance.getNameKey(itemEffect))) {
-            effect = I18n.get(langKey);
+        if (I18nWrapper.exists(langKey = ItemEffectLangManager.instance.getNameKey(itemEffect))) {
+            effect = I18nWrapper.get(langKey);
         }
         guiGraphics.pose().pushPose();
 

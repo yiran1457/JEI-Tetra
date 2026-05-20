@@ -1,6 +1,6 @@
 package net.yiran.jeitetra.effect;
 
-import net.minecraft.client.resources.language.I18n;
+import net.yiran.jeitetra.util.I18nWrapper;
 import se.mickelus.tetra.effect.ItemEffect;
 
 import java.util.Arrays;
@@ -23,10 +23,10 @@ public class ItemEffectLangHelper {
         var effect = itemEffect.getKey();
         var effect3 = effect.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
         for (var prefix : prefixs) {
-            if (I18n.exists(prefix + effect)) {
+            if (I18nWrapper.exists(prefix + effect)) {
                 return prefix + effect;
             }
-            if (I18n.exists(prefix + effect3)) {
+            if (I18nWrapper.exists(prefix + effect3)) {
                 return prefix + effect3;
             }
         }
@@ -36,15 +36,15 @@ public class ItemEffectLangHelper {
     public static String getDescKey(ItemEffect itemEffect) {
         var effect = itemEffect.getKey();
         var effect3 = effect.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
-        if (I18n.exists("jeitetra.effect." + effect + ".desc")) {
+        if (I18nWrapper.exists("jeitetra.effect." + effect + ".desc")) {
             return "jeitetra.effect." + effect + ".desc";
         }
         for (var prefix : prefixs) {
             for (var suffix : suffixs) {
-                if (I18n.exists(prefix + effect + suffix)) {
+                if (I18nWrapper.exists(prefix + effect + suffix)) {
                     return prefix + effect + suffix;
                 }
-                if (I18n.exists(prefix + effect3 + suffix)) {
+                if (I18nWrapper.exists(prefix + effect3 + suffix)) {
                     return prefix + effect3 + suffix;
                 }
             }

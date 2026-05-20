@@ -137,6 +137,7 @@ dependencies {
     }
     modImplementation("curse.maven:just-enough-characters-250702:6680042")
     modCompileOnly("curse.maven:tetraextend-enchant-1545513:8106405")
+    modImplementation("curse.maven:advanced-loot-info-1205426:8002062")
 }
 
 // Uncomment the lines below if you wish to configure mixin. The mixin file should be named modid.mixins.json.

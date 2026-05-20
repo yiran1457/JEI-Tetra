@@ -3,11 +3,11 @@ package net.yiran.jeitetra.ingredient;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.TooltipFlag;
 import net.yiran.jeitetra.material.MaterialDataHelper;
+import net.yiran.jeitetra.util.I18nWrapper;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.module.data.MaterialData;
 
@@ -49,7 +49,7 @@ public class MaterialDataIngredient implements BasicIngredient<MaterialData> {
     public void render(GuiGraphics guiGraphics, MaterialData materialData) {
         var font = Minecraft.getInstance().font;
         var color = (materialData.key.hashCode() & 0x00FFFFFF) | 0xCC000000;
-        String drawString = I18n.get(MaterialDataHelper.INSTANCE.getMaterialKey(materialData));
+        String drawString = I18nWrapper.get(MaterialDataHelper.INSTANCE.getMaterialKey(materialData));
         drawString = drawString.replaceAll("(§)(.)", "");
         var cha = drawString.charAt(0);
         if (Character.isLowerCase(cha)) {

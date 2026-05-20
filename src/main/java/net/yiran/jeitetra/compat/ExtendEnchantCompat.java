@@ -1,9 +1,9 @@
 package net.yiran.jeitetra.compat;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.fml.ModList;
 import net.yiran.jeitetra.util.GuiCustomData;
 import net.yiran.jeitetra.util.GuiMultiInfo;
+import net.yiran.jeitetra.util.I18nWrapper;
 import net.yiran.tee.TetraExtendEnchant;
 import net.yiran.tee.core.IEnchantmentsDataProvider;
 import se.mickelus.tetra.module.data.MaterialData;
@@ -30,7 +30,7 @@ public class ExtendEnchantCompat {
         data.addChild(new GuiMultiInfo(5, "enchantmentsT", enchantments
                 .entrySet().stream()
                 .collect(Collectors.toMap(
-                        e ->I18n.get( e.getKey().getDescriptionId()),
+                        e -> I18nWrapper.get( e.getKey().getDescriptionId()),
                         e -> String.format("%.02f",e.getValue())
                 ))
         ));
