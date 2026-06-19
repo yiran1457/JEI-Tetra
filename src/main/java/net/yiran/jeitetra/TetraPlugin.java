@@ -4,6 +4,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.*;
+import com.yanny.ali.compatibility.common.GenericUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.CreativeModeTabRegistry;
@@ -111,6 +112,7 @@ public class TetraPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         currentSchedule(() -> {
+            GenericUtils.register(registration, (recipeRegistration, fullCompressedData) -> ActionRecipeCategory.updateLootData(fullCompressedData));
             registration.addRecipes(EffectRecipeCategory.recipeType, getAllEffects());
             registration.addRecipes(ActionRecipeCategory.recipeType, flatData(DataManager.instance.actionData));
             registration.addRecipes(ReplacementRecipeCategory.recipeType,
