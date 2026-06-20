@@ -7,6 +7,7 @@ import mezz.jei.api.registration.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.CreativeModeTabRegistry;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.yiran.jeitetra.ingredient.ImprovementDataIngredient;
@@ -99,7 +100,7 @@ public class TetraPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         var guiHelper = registration.getJeiHelpers().getGuiHelper();
         registration.addRecipeCategories(
-                new ActionRecipeCategory(guiHelper),
+                isAliLoaded() ? new AliActionRecipeCategory(guiHelper) : new ActionRecipeCategory(guiHelper),
                 new ReplacementRecipeCategory(guiHelper),
                 new EffectRecipeCategory(guiHelper),
                 new MaterialRecipeCategory(guiHelper),
@@ -111,6 +112,9 @@ public class TetraPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         currentSchedule(() -> {
+            if (isAliLoaded()) {
+                AliActionRecipeCategory.registerLootData(registration);
+            }
             registration.addRecipes(EffectRecipeCategory.recipeType, getAllEffects());
             registration.addRecipes(ActionRecipeCategory.recipeType, flatData(DataManager.instance.actionData));
             registration.addRecipes(ReplacementRecipeCategory.recipeType,
@@ -178,5 +182,9 @@ public class TetraPlugin implements IModPlugin {
 
     public static List<ItemEffect> getAllEffects() {
         return new ArrayList<>(ItemEffect.effectMap.values());
+    }
+
+    private boolean isAliLoaded() {
+        return ModList.get().isLoaded("ali");
     }
 }

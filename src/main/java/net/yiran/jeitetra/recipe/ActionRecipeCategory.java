@@ -2,6 +2,7 @@ package net.yiran.jeitetra.recipe;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -27,13 +28,16 @@ public class ActionRecipeCategory extends AbstractRecipeCategory<ConfigActionImp
     public Minecraft mc;
 
     public ActionRecipeCategory(IGuiHelper guiHelper) {
-        super(
-                recipeType,
+        this(
                 Component.translatable("jeitetra.action.title"),
                 guiHelper.createDrawableItemLike(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tetra:geode"))),
                 150,
                 42
         );
+    }
+
+    protected ActionRecipeCategory(Component title, IDrawable icon, int width, int height) {
+        super(recipeType, title, icon, width, height);
         mc = Minecraft.getInstance();
     }
 
