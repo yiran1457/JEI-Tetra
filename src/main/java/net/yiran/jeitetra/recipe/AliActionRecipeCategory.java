@@ -91,7 +91,7 @@ public class AliActionRecipeCategory extends ActionRecipeCategory {
 
         var z = new ClientUtils() {
             public @Nullable String getTranslationKey(int index) {
-                return null;
+                return ((AliClientRegistry) PluginManager.getInstance().clientRegistry).getTranslationKey(index);
             }
 
             public @NotNull TooltipNodePalette getTooltipCache() {
