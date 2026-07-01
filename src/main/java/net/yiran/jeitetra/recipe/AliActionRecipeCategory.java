@@ -2,12 +2,11 @@ package net.yiran.jeitetra.recipe;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
-import com.yanny.aci.api.IWidget;
 import com.yanny.aci.api.Rect;
 import com.yanny.aci.api.RelativeRect;
+import com.yanny.aci.tooltip.TooltipNodePalette;
 import com.yanny.ali.api.IDataNode;
 import com.yanny.ali.api.IItemNode;
-import com.yanny.ali.api.ITooltipNode;
 import com.yanny.ali.api.IWidgetUtils;
 import com.yanny.ali.compatibility.common.GameplayLootType;
 import com.yanny.ali.compatibility.common.GenericUtils;
@@ -15,9 +14,10 @@ import com.yanny.ali.jei.compatibility.jei.JeiBaseLoot;
 import com.yanny.ali.jei.compatibility.jei.JeiLootSlotWidget;
 import com.yanny.ali.jei.compatibility.jei.JeiScrollWidget;
 import com.yanny.ali.jei.compatibility.jei.JeiWidgetWrapper;
+import com.yanny.ali.manager.AliClientRegistry;
+import com.yanny.ali.manager.PluginManager;
 import com.yanny.ali.plugin.client.ClientUtils;
 import com.yanny.ali.plugin.client.widget.LootTableWidget;
-import com.yanny.ali.plugin.common.NodeUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -50,6 +50,7 @@ import net.yiran.jeitetra.util.Drawables;
 import net.yiran.jeitetra.util.I18nWrapper;
 import net.yiran.jeitetra.util.ItemUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 import oshi.util.tuples.Triplet;
 import se.mickelus.mutil.gui.GuiElement;
@@ -58,12 +59,7 @@ import se.mickelus.tetra.blocks.workbench.action.ConfigActionImpl;
 import se.mickelus.tetra.blocks.workbench.gui.ToolRequirementGui;
 import se.mickelus.tetra.properties.PropertyHelper;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @SuppressWarnings({"removal", "all"})
 public class AliActionRecipeCategory extends ActionRecipeCategory {
@@ -93,7 +89,20 @@ public class AliActionRecipeCategory extends ActionRecipeCategory {
     public static void updateLootData(byte[] fullCompressedData) {
         LOOT_DATA.clear();
 
-        var decompressed = GenericUtils.decompressLootData(fullCompressedData);
+        var z = new ClientUtils() {
+            public @Nullable String getTranslationKey(int index) {
+                return null;
+            }
+
+            public @NotNull TooltipNodePalette getTooltipCache() {
+                return ((AliClientRegistry) PluginManager.getInstance().clientRegistry).getTooltipCache();
+            }
+
+            @Override
+            public void addSlotWidget(Either<ItemStack, TagKey<? extends ItemLike>> item, IDataNode entry, RelativeRect rect) {
+            }
+        };
+        var decompressed = GenericUtils.decompressLootData(z, fullCompressedData);
 
         for (Map.Entry<ResourceLocation, GenericUtils.LootData> entry : decompressed.getA().entrySet()) {
             GenericUtils.LootData data = entry.getValue();
@@ -195,7 +204,10 @@ public class AliActionRecipeCategory extends ActionRecipeCategory {
                     .setSlotName(getAliSlotName(configAction, i))
                     .setPosition(holder.rect().getX(), holder.rect().getY())
                     .addRichTooltipCallback((slotView, tooltipBuilder)
-                            -> tooltipBuilder.addAll(NodeUtils.toComponents((ITooltipNode) holder.entry().getTooltip(), 0, Minecraft.getInstance().options.advancedItemTooltips)));
+                            -> tooltipBuilder.addAll(
+                            holder.entry().getTooltip()
+                                    .getComponents(0, Minecraft.getInstance().options.advancedItemTooltips)
+                    ));
             Optional<ItemStack> left = holder.item().left();
             Optional<TagKey<? extends ItemLike>> right = holder.item().right();
 
@@ -241,6 +253,14 @@ public class AliActionRecipeCategory extends ActionRecipeCategory {
     @NotNull
     private IWidgetUtils getJeiUtils(List<JeiBaseLoot.Holder> holders) {
         return new ClientUtils() {
+            public @Nullable String getTranslationKey(int index) {
+                return null;
+            }
+
+            public @NotNull TooltipNodePalette getTooltipCache() {
+                return ((AliClientRegistry) PluginManager.getInstance().clientRegistry).getTooltipCache();
+            }
+
             @Override
             public void addSlotWidget(Either<ItemStack, TagKey<? extends ItemLike>> item, IDataNode entry, RelativeRect rect) {
                 holders.add(new JeiBaseLoot.Holder(item, entry, rect));
@@ -271,7 +291,8 @@ public class AliActionRecipeCategory extends ActionRecipeCategory {
         }
     }
 
-    private record ShiftedAliScrollWidget(JeiScrollWidget widget, int yOffset) implements ISlottedRecipeWidget, IJeiInputHandler {
+    private record ShiftedAliScrollWidget(JeiScrollWidget widget,
+                                          int yOffset) implements ISlottedRecipeWidget, IJeiInputHandler {
         @NotNull
         @Override
         public ScreenPosition getPosition() {
