@@ -137,10 +137,10 @@ dependencies {
     }
     modImplementation("curse.maven:just-enough-characters-250702:6680042")
     modCompileOnly("curse.maven:tetraextend-enchant-1545513:8106405")
-    //AdvancedLootInfo-forge-1.20.1-1.12.0
-    modImplementation ("curse.maven:advanced-loot-info-1205426:8168726")
-    //1.9.1
-    //modImplementation("curse.maven:advanced-loot-info-1205426:8002062")
+    //AdvancedLootInfo-forge-1.20.1-2.5.0 (兼容 2.4.0+；2.x 起核心库拆分为独立的 AdvancedCoreInfo)
+    modImplementation("curse.maven:advanced-loot-info-1205426:9208463")
+    //AdvancedCoreInfo-forge-1.20.1-1.5.0
+    modImplementation("curse.maven:advanced-core-info-1661923:9208458")
 }
 
 // Uncomment the lines below if you wish to configure mixin. The mixin file should be named modid.mixins.json.
